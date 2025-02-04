@@ -4,16 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quote APP</title>
+    <link rel="stylesheet" href="style.css  ">
 </head>
 <body>
     <div class="container">
-        <div class="quote"> </div>
+        <div class="quote"><p>click the button for a quote</p> </div>
         <div class="author"></div>
         <button class="refresh"> new </button>
         <button class="copy">copy</button>
     </div>
 </body>
 <script>
-    
+    const quote = document.querySelector( ".quote")
+    const quoteAuthor=document.querySelector(".author")
+    const refreshQuote=document.querySelector(".refresh")
+    const cpyQuote=document.querySelector(".copy")
+    async function getQ() {
+        try{
+            const responce = await fetch("https://api.quotable.io")
+            const data = await responce.json();
+            quote.innerHTML = `${data.content}`
+            quoteAuthor.innerHTML = ` ${data.author}`
+        }catch(error){
+        quote.textContent = " error loading the quote";
+        quoteAuthor.textContent=  "";
+        }
+    }
+    function copyQuote(){
+        navigator.clipboard.writeText(quote.textContent + "  " + quoteAuthor.textContent).then(()=>alert("quote copied")).catch(()=>alert("failed to copy quote"));
+    }
+    refreshQuote.addEventListener("click",getQ);
+    cpyQuote.addEventListener("click",copyQuote);
+    getQ();
 </script>
+
 </html>
